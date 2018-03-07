@@ -1,4 +1,5 @@
 // https://www.quickprogrammingtips.com/java/how-to-generate-sha256-hash-in-java.html
+// Class to create a SHA256 hash to a String
 
 import java.security.MessageDigest;
 
@@ -13,11 +14,14 @@ public class ToHash {
     }
   }
 
+  // Converting the hash to a String
   private static String bytesToHex(byte[] hash) {
     StringBuffer hexString = new StringBuffer();
     for (int i = 0; i < hash.length; i++) {
       String hex = Integer.toHexString(0xff & hash[i]);
-      if (hex.length() == 1) hexString.append('0');
+      if (hex.length() == 1) {
+        hexString.append('0');
+      }
       hexString.append(hex);
     }
     return hexString.toString();
