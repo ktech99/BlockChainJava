@@ -16,6 +16,7 @@ public class Block {
     this.previousHash = previousHash;
     this.timeStamp = new Date().getTime();
     this.hash = calculateHash();
+    nonce = 0;
   }
 
   // returns the calculated Hash
@@ -31,7 +32,7 @@ public class Block {
         new String(new char[difficulty])
             .replace('\0', '0'); // Create a string with difficulty * "0"
     // Increases the nonce value till the hash matches the required target
-    while (!hash.substring(0, difficulty).equals(target)) {
+    while (!getHash().substring(0, difficulty).equals(target)) {
       nonce++;
       hash = calculateHash();
     }
@@ -52,7 +53,7 @@ public class Block {
   public boolean isValid(Block previousBlock, int difficulty) {
     String hashTarget = new String(new char[difficulty]).replace('\0', '0');
     // checking if current hash is changed
-    if (this.getHash() != this.calculateHash()) {
+    if (!this.getHash().equals(this.calculateHash())) {
       System.out.println("Current not equal");
       return false;
     }
