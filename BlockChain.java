@@ -20,11 +20,12 @@ public class BlockChain {
     blockList.get(1).mineBlock(difficulty);
     // checking if blocks are valid
     for (int i = 1; i < blockList.size(); i++) {
-      if (blockList.get(i).isValid(blockList.get(i - 1), difficulty)) {
+      if (!blockList.get(i).isValid(blockList.get(i - 1), difficulty)) {
         valid = false;
       }
     }
     System.out.println("blockChain is valid: " + valid);
+    // converting blockChain to json format
     String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockList);
     System.out.println(blockchainJson);
   }
