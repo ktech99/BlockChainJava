@@ -55,22 +55,9 @@ public class Block {
   // Checks if the hash is valid
   public boolean isValid(Block previousBlock, int difficulty) {
     String hashTarget = new String(new char[difficulty]).replace('\0', '0');
-    // checking if current hash is changed
-    if (!this.getHash().equals(this.calculateHash())) {
-      System.out.println("Current not equal");
-      return false;
-    }
-    // checking if previous hash is changed
-    if (previousBlock.getHash() != this.getPreviousHash()) {
-      System.out.println("prev not equal");
-      return false;
-    }
-    // checking if the block has been mined
-    if (!this.getHash().substring(0, difficulty).equals(hashTarget)) {
-      System.out.println("This block hasn't been mined");
-      return false;
-    }
-    return true;
+    return this.getHash().equals(this.calculateHash())
+        && previousBlock.getHash() == this.getPreviousHash()
+        && this.getHash().substring(0, difficulty).equals(hashTarget);
   }
 
   // Returns block in Json format
