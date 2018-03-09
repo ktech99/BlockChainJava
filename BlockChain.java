@@ -1,10 +1,9 @@
-import com.google.gson.*;
 import java.util.*;
 
 public class BlockChain {
 
   private static ArrayList<Block> blockList = new ArrayList<Block>();
-  public static final int difficulty = 5;
+  public static final int difficulty = 1;
 
   public static void main(String[] args) {
     boolean valid = true;
@@ -26,7 +25,10 @@ public class BlockChain {
     }
     System.out.println("blockChain is valid: " + valid);
     // converting blockChain to json format
-    String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockList);
-    System.out.println(blockchainJson);
+    // String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockList);
+    System.out.println("The BlockChain:");
+    for (Block b : blockList) {
+      System.out.println(b.toString());
+    }
   }
 }

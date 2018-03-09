@@ -1,3 +1,6 @@
+// This class Creates a block and checks the validity of previous block
+
+import com.google.gson.*;
 import java.util.Date;
 
 public class Block {
@@ -68,5 +71,10 @@ public class Block {
       return false;
     }
     return true;
+  }
+
+  // Returns block in Json format
+  public String toString() {
+    return new GsonBuilder().setPrettyPrinting().create().toJson(this);
   }
 }
