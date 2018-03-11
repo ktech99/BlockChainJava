@@ -1,18 +1,17 @@
 import java.security.*;
 import java.util.ArrayList;
 import java.util.Base64;
-import org.apache.commons.lang3.*;
 
 public class Transaction {
 
-  public String transactionId; // Hash of the transaction
-  public PublicKey sender; // Senders Public Key
-  public PublicKey reciever; // Recievers public key
-  public float amount; // Amount to send
-  public byte[] signature; // Our signatutre
+  private String transactionId; // Hash of the transaction
+  private PublicKey sender; // Senders Public Key
+  private PublicKey reciever; // Recievers public key
+  private float amount; // Amount to send
+  private byte[] signature; // Our signatutre
 
-  public ArrayList<TransactionInput> inputs;
-  public ArrayList<TransactionOutput> outputs;
+  private ArrayList<TransactionInput> inputs;
+  private ArrayList<TransactionOutput> outputs;
 
   private static int number; // approximate number of transactions
 
@@ -30,7 +29,7 @@ public class Transaction {
     return StringUtil.applySha256(
         StringUtil.getStringFromKey(sender)
             + StringUtil.getStringFromKey(reciever)
-            + Float.toString(amount)
+            + Float.toString(getAmount())
             + number);
   }
 
@@ -70,18 +69,18 @@ public class Transaction {
   // Signs all the data we dont wish to be tampered with.
   public void generateSignature(PrivateKey privateKey) {
     String data =
-        StringUtil.getStringFromKey(sender)
-            + StringUtil.getStringFromKey(reciever)
-            + Float.toString(amount);
+        StringUtil.getStringFromKey(getSender())
+            + StringUtil.getStringFromKey(getReciever())
+            + Float.toString(getAmount());
     signature = StringUtil.applyECDSASig(privateKey, data);
   }
   // Verifies the data we signed hasnt been tampered with
   public boolean verifiySignature() {
     String data =
-        StringUtil.getStringFromKey(sender)
-            + StringUtil.getStringFromKey(reciever)
-            + Float.toString(amount);
-    return StringUtil.verifyECDSASig(sender, data, signature);
+        StringUtil.getStringFromKey(getSender())
+            + StringUtil.getStringFromKey(getReciever())
+            + Float.toString(getAmount());
+    return StringUtil.verifyECDSASig(getSender(), data, getSignature());
   }
 
   public boolean processTransaction() {
@@ -98,10 +97,10 @@ public class Transaction {
       return false;
     }
 
-    float leftOver = getInputsValue() - amount;
+    float leftOver = getInputsValue() - getAmount();
     transactionId = calulateHash();
-    outputs.add(new TransactionOutput(this.reciever, amount, transactionId));
-    outputs.add(new TransactionOutput(this.sender, leftOver, transactionId));
+    outputs.add(new TransactionOutput(this.getReciever(), getAmount(), getTransactionId()));
+    outputs.add(new TransactionOutput(this.getSender(), leftOver, getTransactionId()));
     for (TransactionOutput out : outputs) {
       BlockChain.UTXOs.put(out.id, out);
     }
@@ -112,7 +111,7 @@ public class Transaction {
     }
     return true;
   }
-  // TODO : remove redundency
+
   public float getInputsValue() {
     float total = 0;
     for (TransactionInput i : inputs) {
@@ -129,5 +128,25 @@ public class Transaction {
       total += o.value;
     }
     return total;
+  }
+
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  public PublicKey getSender() {
+    return sender;
+  }
+
+  public PublicKey getReciever() {
+    return reciever;
+  }
+
+  public float getAmount() {
+    return amount;
+  }
+
+  public byte[] getSignature() {
+    return signature;
   }
 }
