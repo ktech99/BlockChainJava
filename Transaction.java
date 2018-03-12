@@ -4,19 +4,20 @@ import java.util.Base64;
 
 public class Transaction {
 
-  private String transactionId; // Hash of the transaction
+  public String transactionId; // Hash of the transaction
   private PublicKey sender; // Senders Public Key
   private PublicKey reciever; // Recievers public key
   private float amount; // Amount to send
   private byte[] signature; // Our signatutre
 
   private ArrayList<TransactionInput> inputs;
-  private ArrayList<TransactionOutput> outputs;
+  public ArrayList<TransactionOutput> outputs;
 
   private static int number; // approximate number of transactions
 
   public Transaction(
       PublicKey from, PublicKey to, float amount, ArrayList<TransactionInput> inputs) {
+    outputs = new ArrayList<TransactionOutput>();
     this.sender = from;
     this.reciever = to;
     this.amount = amount;
@@ -148,5 +149,13 @@ public class Transaction {
 
   public byte[] getSignature() {
     return signature;
+  }
+
+  public ArrayList<TransactionOutput> getOutputs() {
+    return outputs;
+  }
+
+  public ArrayList<TransactionInput> getInputs() {
+    return inputs;
   }
 }

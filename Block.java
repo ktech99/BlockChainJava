@@ -1,6 +1,7 @@
 // This class Creates a block and checks the validity of previous block
 
 import com.google.gson.*;
+import java.util.*;
 import java.util.Date;
 
 public class Block {
@@ -9,12 +10,15 @@ public class Block {
   private String data; // Storing data of block
   private long timeStamp; // Storing the timeStamp
   private int nonce; // storing the number of nonce
+  public String merkleRoot;
+  public ArrayList<Transaction> transactions =
+      new ArrayList<Transaction>(); // our data will be a simple message.
 
   // Sets data
   // Sets previous hash
   // generates the timeStamp
   // calculates the current hash
-  public Block(String data, String previousHash) {
+  public Block(String previousHash) {
     this.data = data;
     this.previousHash = previousHash;
     this.timeStamp = new Date().getTime();
@@ -25,7 +29,7 @@ public class Block {
   // returns the calculated Hash
   public String calculateHash() {
     String calculatedHash =
-        ToHash.applyHash(previousHash + "" + timeStamp + "" + nonce + "" + data);
+        ToHash.applyHash(previousHash + "" + timeStamp + "" + nonce + "" + merkleRoot);
     return calculatedHash;
   }
 
@@ -39,7 +43,7 @@ public class Block {
       nonce++;
       hash = calculateHash();
     }
-    System.out.println("Block Mined!!! : " + hash);
+    System.out.println("Block Mined! : " + getHash());
   }
 
   // Returns the hash value
@@ -58,6 +62,21 @@ public class Block {
     return this.getHash().equals(this.calculateHash())
         && previousBlock.getHash() == this.getPreviousHash()
         && this.getHash().substring(0, difficulty).equals(hashTarget);
+  }
+
+  // Add transaction to the blck
+  public boolean addTransaction(Transaction transaction) {
+    // process transaction and check if valid, unless block is genesis block then ignore.
+    if (transaction == null) return false;
+    if ((previousHash != "0")) {
+      if ((transaction.processTransaction() != true)) {
+        System.out.println("Transaction failed to process. Discarded.");
+        return false;
+      }
+    }
+    transactions.add(transaction);
+    System.out.println("Transaction Successfully added to Block");
+    return true;
   }
 
   // Returns block in Json format
