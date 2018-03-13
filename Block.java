@@ -7,19 +7,16 @@ import java.util.Date;
 public class Block {
   private String hash; // Storing hash of current block
   private String previousHash; // Storing hash of previous block
-  private String data; // Storing data of block
   private long timeStamp; // Storing the timeStamp
   private int nonce; // storing the number of nonce
-  public String merkleRoot;
+  public String merkleRoot; // Stores the merkleRoot
   public ArrayList<Transaction> transactions =
       new ArrayList<Transaction>(); // our data will be a simple message.
 
-  // Sets data
   // Sets previous hash
   // generates the timeStamp
   // calculates the current hash
   public Block(String previousHash) {
-    this.data = data;
     this.previousHash = previousHash;
     this.timeStamp = new Date().getTime();
     this.hash = calculateHash();
@@ -64,12 +61,14 @@ public class Block {
         && this.getHash().substring(0, difficulty).equals(hashTarget);
   }
 
-  // Add transaction to the blck
+  // Add transaction to the block
   public boolean addTransaction(Transaction transaction) {
     // process transaction and check if valid, unless block is genesis block then ignore.
-    if (transaction == null) return false;
+    if (transaction == null) {
+      return false;
+    }
     if ((previousHash != "0")) {
-      if ((transaction.processTransaction() != true)) {
+      if (!(transaction.processTransaction())) {
         System.out.println("Transaction failed to process. Discarded.");
         return false;
       }
