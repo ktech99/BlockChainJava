@@ -29,10 +29,11 @@ public class Wallet {
     publicKey = keyPair.getPublic();
   }
 
+  // Returns balance of the wallet by adding up all unspent transactions
   public float getBalance() {
     float total = 0;
-    for (Map.Entry<String, TransactionOutput> item : BlockChain.UTXOs.entrySet()) {
-      TransactionOutput UTXO = item.getValue();
+    for (String item : BlockChain.UTXOs.keySet()) {
+      TransactionOutput UTXO = BlockChain.UTXOs.get(item);
       if (UTXO.isMine(publicKey)) {
         UTXOs.put(UTXO.id, UTXO);
         total += UTXO.value;
@@ -48,8 +49,8 @@ public class Wallet {
     }
     ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     float total = 0;
-    for (Map.Entry<String, TransactionOutput> item : UTXOs.entrySet()) {
-      TransactionOutput UTXO = item.getValue();
+    for (String item : UTXOs.keySet()) {
+      TransactionOutput UTXO = UTXOs.get(item);
       total += UTXO.value;
       inputs.add(new TransactionInput(UTXO.id));
       if (total > value) {
