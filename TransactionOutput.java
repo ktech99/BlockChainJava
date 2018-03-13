@@ -1,5 +1,4 @@
 import java.security.*;
-import org.apache.commons.lang3.*;
 
 public class TransactionOutput {
   public String id;
@@ -7,7 +6,7 @@ public class TransactionOutput {
   public float value; // the amount of coins they own
   public String parentTransactionId; // the id of the transaction this output was created in
 
-  // Constructor
+  // creates the id of transaction
   public TransactionOutput(PublicKey reciepient, float value, String parentTransactionId) {
     this.reciepient = reciepient;
     this.value = value;
